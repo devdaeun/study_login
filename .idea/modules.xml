@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common-module/study_login.common-module.main.iml" filepath="$PROJECT_DIR$/.idea/modules/common-module/study_login.common-module.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/eureka/study_login.eureka.main.iml" filepath="$PROJECT_DIR$/.idea/modules/eureka/study_login.eureka.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gateway/study_login.gateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/gateway/study_login.gateway.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/product-service/study_login.product-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/product-service/study_login.product-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/slack-service/study_login.slack-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/slack-service/study_login.slack-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/user/study_login.user.main.iml" filepath="$PROJECT_DIR$/.idea/modules/user/study_login.user.main.iml" />
+    </modules>
+  </component>
+</project>

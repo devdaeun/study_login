@@ -1,0 +1,42 @@
+spring:
+  main:
+    web-application-type: reactive
+    allow-bean-definition-overriding: true
+  application:
+    name: gateway
+
+  cloud:
+    gateway:
+        routes:
+          - id: user
+            uri: lb://user
+            predicates:
+              - Path=/api/v1/users/**
+          - id: product-service
+            uri: lb://product-service
+            predicates:
+              - Path=/api/v1/products/**
+          - id: slack-service
+            uri: lb://slack-service
+            predicates:
+              - Path=/api/v1/slacks/**
+        discovery:
+          locator:
+            enabled: true
+
+server:
+  port: 8080
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+service:
+  jwt:
+    secret-key: "50OsBNAaYDd8KJkGL8DCy8l8GFeJY--lzgxXrQJA-vUl1ZfivKtLNuwR_qNn2LJ6NkXpg8AAa2fe2CVUtN4UcQ"
+
+management:
+  security:
+    enabled: false

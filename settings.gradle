@@ -1,0 +1,8 @@
+rootProject.name = 'study_login'
+
+include('eureka')
+include('user')
+include('gateway')
+include('product-service')
+include('common-module')
+include('slack-service')

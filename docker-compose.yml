@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  # PostgreSQL 데이터베이스 설정
+  postgres:
+    image: postgres:latest
+    container_name: postgres_msa
+    ports:
+      - "5001:5432"  # 외부에서 접속할 수 있는 포트
+    environment:
+      POSTGRES_USER: postgres_msa
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: msa_db  # 생성할 데이터베이스 이름
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # 데이터가 유지될 경로
+    networks:
+      - msa-networks  # user 서비스와만 연결될 네트워크
+
+  # Eureka 서버 설정
+  eureka-servers:
+    build:
+      context: .
+      dockerfile: eureka/Dockerfile.dev
+    container_name: eureka-servers
+    ports:
+      - "8761:8761"
+    networks:
+      - msa-networks
+
+  # 다른 서비스들 (예: API Gateway, AI, Auth, 등)
+  api-gateways:
+    build:
+      context: .
+      dockerfile: gateway/Dockerfile.dev
+    container_name: api-gateways
+    ports:
+      - "8080:8080"
+    networks:
+      - msa-networks
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-servers:8761/eureka
+    depends_on:
+      - eureka-servers
+
+
+  user:
+    build:
+      context: .  # 루트에서 빌드
+      dockerfile: user/Dockerfile.dev
+    container_name: user
+    ports:
+      - "8081:8080"
+    depends_on:
+      - eureka-servers
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-servers:8761/eureka
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_msa:5001/msa_db
+      - SPRING_DATASOURCE_USERNAME=postgres_msa
+      - SPRING_DATASOURCE_PASSWORD=12345
+      - SPRING_DATASOURCE_SCHEMA=users
+    networks:
+      - msa-networks
+
+#  product-services:
+#    build:
+#      context: .
+#      dockerfile: product-service/Dockerfile.dev
+#    container_name: product-services
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-servers:8761/eureka
+#      - SPRING_PROFILES_ACTIVE=docker
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/msa_db
+#      - SPRING_DATASOURCE_USERNAME=postgres
+#      - SPRING_DATASOURCE_PASSWORD=123456
+#      - SPRING_DATASOURCE_SCHEMA=products
+#    networks:
+#      - msa-networks
+#    depends_on:
+#      - eureka-servers
+#      - postgres
+
+networks:
+  msa-networks:
+    driver: bridge
+
+volumes:
+  postgres_data:  # PostgreSQL 데이터 저장을 위한 볼륨
