@@ -15,10 +15,10 @@ public class productController {
     public ResponseEntity<?> getproduct(@RequestHeader("user_id") String user_id,
                                         @RequestHeader("role") String role,
                                         @RequestHeader("slack_name") String slackName) {
-        return ResponseEntity.ok("Hello World "+user_id +" "+role + " "+ slackName);
+        return ResponseEntity.ok("Hello World " + user_id + " " + role + " " + slackName);
     }
 
-    @RoleCheck("ROLE_MASTER")
+    @RoleCheck("ROLE_MASTER,ROLE_COMPANY")
     @GetMapping("/test2")
     public ResponseEntity<?> getproduct2() {
         return ResponseEntity.ok("Hello World");
