@@ -61,6 +61,24 @@ services:
       - SPRING_DATASOURCE_SCHEMA=users
     networks:
       - msa-networks
+  slack-service:
+    build:
+      context: .  # 루트에서 빌드
+      dockerfile: slack-service/Dockerfile.dev
+    container_name: slack-service
+    ports:
+      - "8081:8080"
+    depends_on:
+      - eureka-servers
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-servers:8761/eureka
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres_msa:5001/msa_db
+      - SPRING_DATASOURCE_USERNAME=postgres_msa
+      - SPRING_DATASOURCE_PASSWORD=12345
+      - SPRING_DATASOURCE_SCHEMA=slacks
+    networks:
+      - msa-networks
 
 #  product-services:
 #    build:

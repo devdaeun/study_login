@@ -23,7 +23,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers("/api/v1/users/sign-in", "/api/v1/users/sign-up").permitAll()
-                        .pathMatchers("/api/v1/products/test2").permitAll() // 권한 기반 접근
+                        .pathMatchers("/api/v1/**").permitAll() // 권한 기반 접근
                         .anyExchange().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter(), SecurityWebFiltersOrder.AUTHENTICATION)//인증필터

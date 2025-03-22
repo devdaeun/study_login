@@ -1,8 +1,17 @@
 spring:
   application:
     name: slack-service
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  datasource:
+    url: jdbc:postgresql://localhost:5001/msa_db  # Docker의 PostgreSQL 컨테이너의 IP 또는 호스트와 포트를 사용
+    username: postgres_msa  # PostgreSQL 사용자 이름
+    password: 12345  # PostgreSQL 비밀번호
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      schema: slacks
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect  # PostgreSQL에 맞는 Hibernate Dialect 설정
 server:
   port: 8087
 
@@ -11,4 +20,9 @@ eureka:
     register-with-eureka: true # Eureka? ??? ??
     fetch-registry: true # Eureka?? ??? ?? ????
     service-url:
-     defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/
+
+
+slack:
+  webhook:
+    url: https://hooks.slack.com/services/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
