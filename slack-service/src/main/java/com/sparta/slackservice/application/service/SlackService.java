@@ -2,9 +2,12 @@ package com.sparta.slackservice.application.service;
 
 import com.sparta.slackservice.application.dto.SlackRequestDto;
 import com.sparta.slackservice.application.dto.SlackResponseDto;
+import com.sparta.slackservice.application.dto.SlackSearchRequestDto;
 import com.sparta.slackservice.domain.model.Slack;
 import com.sparta.slackservice.infastructure.JpaSlackRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,8 +22,8 @@ public class SlackService {
     private final SlackWebhookService slackWebhookService;
 
     //슬랙 메세지 생성
-    public SlackResponseDto createSlack(String slack_name, SlackRequestDto requestDto) {
-        Slack slack = slackRepository.save(requestDto.createSlack(slack_name));
+    public SlackResponseDto createSlack(String slack_name, SlackRequestDto requestDto, Long userId) {
+        Slack slack = slackRepository.save(requestDto.createSlack(slack_name, userId));
         return new SlackResponseDto(slack);
     }
 
@@ -37,8 +40,14 @@ public class SlackService {
         return findingSlack(slackId);
     }
 
+    //메세지 조회(전체)
+    @Transactional(readOnly = true)
+    public Page<SlackResponseDto> searchSlack(SlackSearchRequestDto requestDto, Pageable pageable) {
+        return slackRepository.searchSlack(requestDto, pageable);
+    }
+
     //메세지 수정
-    public SlackResponseDto modifySlack(UUID slackId, SlackRequestDto requestDto) {
+    public SlackResponseDto modifySlack(UUID slackId, SlackRequestDto requestDto, Long userId) {
         Slack slack = findingSlack(slackId);
         slack.modifySlack(requestDto);
         return new SlackResponseDto(slack);
@@ -47,7 +56,6 @@ public class SlackService {
     //메세지 삭제
     public void deleteSlack(UUID slackId, Long userId) {
         Slack slack = findingSlack(slackId);
-        slack.delete(userId);
     }
 
     private Slack findingSlack(UUID slackId) {

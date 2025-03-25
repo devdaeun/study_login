@@ -1,11 +1,11 @@
 package com.sparta.slackservice.domain.model;
 
-import com.sparta.commonmodule.entity.BaseEntity;
 import com.sparta.slackservice.application.dto.SlackRequestDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -13,8 +13,10 @@ import java.util.UUID;
 
 @Entity
 @Getter
+@Table(name = "p_slacks")
 @NoArgsConstructor
-public class Slack extends BaseEntity {
+@SQLRestriction("is_deleted IS FALSE")
+public class Slack {
 
     @Id
     @Column(name = "slack_id", nullable = false)
@@ -45,7 +47,6 @@ public class Slack extends BaseEntity {
 
     public void changeStatus() {
         this.sendingStatus = true;
-        this.sendedAt = LocalDateTime.now();
     }
 
     public void modifySlack(SlackRequestDto requestDto) {
